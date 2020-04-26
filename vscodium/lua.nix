@@ -21,10 +21,10 @@ let
     buildPhase = ''
       # remove prebuilt binaries
       rm -rf bin
-      # First thing I tried was separating luamake into in its own
-      # expression, belive me it was bad idea..
-      # This project is full of hardcoded paths and tackling whith it
-      # will create big messy pile of patches, so I followed the
+      # First thing I tried was separating luamake into its own
+      # expression, believe me it was a bad idea..
+      # This project is full of hardcoded paths and tackling whit it
+      # will create a big messy pile of patches, so I followed the
       # author's funky way of doing things..
       cd 3rd/luamake/
       ninja -f ninja/linux.ninja
@@ -59,8 +59,7 @@ in pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     # don't run chmod in store
     sed -i '/fs.chmodSync/d' $out/$installPrefix/client/out/languageserver.js
 
-    # extension comes with prebuild language server,
-    # let's remove it and use our build 
+    # extension comes with prebuild language server
     rm -rf $out/$installPrefix/server
     ln -s ${languageServer} $out/$installPrefix/server
   '';
