@@ -35,6 +35,8 @@
       CPU_SCALING_GOVERNOR_ON_AC=powersave
       CPU_SCALING_GOVERNOR_ON_BAT=powersave
       ENERGY_PERF_POLICY_ON_BAT=power
+      START_CHARGE_THRESH_BAT0=60
+      STOP_CHARGE_THRESH_BAT0=85
     '';
   };
 
@@ -102,6 +104,7 @@
     htop
     alacritty
     (chromium.override { useVaapi = true; })
+    firefox
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
