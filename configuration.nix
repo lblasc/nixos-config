@@ -32,7 +32,7 @@
   services.tlp = {
     enable = true;
     extraConfig = ''
-      CPU_SCALING_GOVERNOR_ON_AC=powersave
+      CPU_SCALING_GOVERNOR_ON_AC=performance
       CPU_SCALING_GOVERNOR_ON_BAT=powersave
       ENERGY_PERF_POLICY_ON_BAT=power
       START_CHARGE_THRESH_BAT0=60
@@ -65,7 +65,13 @@
       speed = 255;
     };
     pulseaudio.enable = true;
+    pulseaudio.support32Bit = true;
+    pulseaudio.extraConfig = ''
+      load-module module-alsa-sink device=hw:0,0 channels=4
+      load-module module-alsa-source device=hw:0,6 channels=4
+    '';
     cpu.intel.updateMicrocode = true;
+    enableRedistributableFirmware = true;
 
     opengl.extraPackages = with pkgs; [
       vaapiIntel
@@ -103,8 +109,7 @@
     screen
     htop
     alacritty
-    (chromium.override { useVaapi = true; })
-    firefox
+    (chromium.override { enableVaapi = true; })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -149,13 +154,10 @@
   # Enable sound.
   sound = {
     enable = true;
-    mediaKeys = {
-      enable = true;
-      volumeStep = "10";
-    };
   };
 
   services = {
+    fwupd.enable = true;
     physlock = {
       allowAnyUser = true;
       enable = true;
@@ -192,7 +194,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lblasc = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" "video" ]; # Enable ‘sudo’ for the user.
     uid = 1000;
   };
 
