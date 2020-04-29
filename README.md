@@ -40,9 +40,21 @@ lrwxrwxrwx 1 lblasc lblasc 79 Apr 22 10:15 result -> /nix/store/f6wnglqc7048gfcs
 $ sudo dd if=result/iso/nixos-20.03pre-git-x86_64-linux.iso of=/dev/sdX bs=1M
 
 
-# boot
+# x1 carbon gen7
+
+Device           Start        End   Sectors   Size Type
+/dev/nvme0n1p1    2048    1026047   1024000   500M EFI System
+/dev/nvme0n1p2 1026048 1000214527 999188480 476.5G Linux filesystem
 
 cryptsetup luksFormat /dev/nvme0n1p2
 cryptsetup luksOpen /dev/nvme0n1p2
+
+mkfs.xfs -L root /dev/mapper/root
+
+# sound issues
+https://github.com/NixOS/nixpkgs/pull/86168
+
+# tmp channel
+nix-channel --add https://github.com/lblasc/nixpkgs/archive/27b742d5f7c.tar.gz nixos
 
 ```
