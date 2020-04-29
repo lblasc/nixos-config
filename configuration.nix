@@ -17,6 +17,7 @@
     loader.efi.canTouchEfiVariables = true;
 
     kernelPackages = pkgs.linuxPackages_latest;
+    extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
 
     plymouth.enable = true;
 
@@ -32,7 +33,7 @@
   services.tlp = {
     enable = true;
     extraConfig = ''
-      CPU_SCALING_GOVERNOR_ON_AC=performance
+      CPU_SCALING_GOVERNOR_ON_AC=powersave
       CPU_SCALING_GOVERNOR_ON_BAT=powersave
       ENERGY_PERF_POLICY_ON_BAT=power
       START_CHARGE_THRESH_BAT0=60
@@ -110,6 +111,7 @@
     htop
     alacritty
     (chromium.override { enableVaapi = true; })
+    slack
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
