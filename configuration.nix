@@ -24,6 +24,19 @@
     cleanTmpDir = true;
   };
 
+  nix.buildMachines = [ {
+    hostName = "builder";
+    system = "x86_64-linux";
+    maxJobs = 2;
+    speedFactor = 2;
+    supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+    mandatoryFeatures = [ ];
+  }] ;
+  nix.distributedBuilds = true;
+  nix.extraOptions = ''
+    builders-use-substitutes = true
+  '';
+
 #  nixpkgs.overlays = [ (import /etc/nixos/overlays) ] ;
 
   networking.hostName = "x1"; # Define your hostname.
@@ -112,6 +125,8 @@
     alacritty
     (chromium.override { enableVaapi = true; })
     slack
+    remmina
+    firefox
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
