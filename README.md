@@ -55,6 +55,6 @@ mkfs.xfs -L root /dev/mapper/root
 https://github.com/NixOS/nixpkgs/pull/86168
 
 # tmp channel
-nix-channel --add https://github.com/lblasc/nixpkgs/archive/27b742d5f7c.tar.gz nixos
+nix-channel --add https://github.com/NixOS/nixpkgs/archive/9d6829d.tar.gz nixos
 
 ```

@@ -6,8 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [
+      ./hardware/x1.nix
       ./vscodium
     ];
 
@@ -123,10 +123,15 @@
     screen
     htop
     alacritty
-    (chromium.override { enableVaapi = true; })
     slack
     remmina
+
     firefox
+    #(chromium.override { enableVaapi = true; })
+    (ungoogled-chromium.override { useVaapi = true; })
+    google-chrome
+
+    (luajit.override { enableGC64 = true; })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
