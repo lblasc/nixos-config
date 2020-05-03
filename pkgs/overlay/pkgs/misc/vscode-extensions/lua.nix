@@ -1,4 +1,4 @@
-{ clangStdenv 
+{ clangStdenv
 , vscode-utils
 , fetchFromGitHub
 , ninja
@@ -43,11 +43,11 @@ let
       # just copy the mess
       mkdir $out
       cp -vr . $out/
-    
+
       # "only" thing left is to tell log module to use /tmp dir
       # instead of store path which is read only
       sed -i "s~ROOT~fs.path('/tmp/lua-language-server')~g" $out/script/workspace.lua
-      sed -i "s~log.init(ROOT, ROOT / 'log' / 'service.log')~log.init(fs.path('/tmp/lua/lua-language-server'), fs.path('/tmp/lua-language-server') / 'log' / 'serivce.log')~" $out/main.lua 
+      sed -i "s~log.init(ROOT, ROOT / 'log' / 'service.log')~log.init(fs.path('/tmp/lua/lua-language-server'), fs.path('/tmp/lua-language-server') / 'log' / 'serivce.log')~" $out/main.lua
     '';
   };
 in vscode-utils.buildVscodeMarketplaceExtension {

@@ -4,10 +4,15 @@
 
 { config, ... }:
 
-let 
+let
   pkgs = import ./pkgs {
-    config.allowUnfree = true; 
+    config.allowUnfree = true;
   };
+  nixos-rebuild = pkgs.writeScriptBin "nixos-rebuild" ''
+    #!${pkgs.stdenv.shell}
+    nixpkgsSrc=$(nix-build /etc/nixos/pkgs -A nixpkgsSrc --no-out-link)
+    exec ${config.system.build.nixos-rebuild}/bin/nixos-rebuild -I nixpkgs=$nixpkgsSrc $@
+  '';
 in {
   imports =
     [
@@ -136,8 +141,7 @@ in {
     remmina
 
     firefox
-    #(chromium.override { enableVaapi = true; })
-    (ungoogled-chromium.override { useVaapi = true; })
+    (chromium.override { enableVaapi = true; })
     google-chrome
 
     (luajit.override { enableGC64 = true; })
@@ -146,13 +150,14 @@ in {
       vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
-        sumneko.Lua       
+        sumneko.Lua
         bbenoist.Nix
         ms-python.python
         vscodevim.vim
         redhat.vscode-yaml
       ]);
     })
+    nixos-rebuild
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -206,7 +211,7 @@ in {
       enable = true;
     };
     # Enable the X11 windowing system.
-    xserver = { 
+    xserver = {
       enable = true;
       layout = "us";
       dpi = 210;
