@@ -13,12 +13,14 @@ let
       (import ./overlay)
     ] ++ overlays;
   };
+
+  # Combine local `pkgs` expressions with `nixos` modules
+  # from `nixpkgs`. Nixos modules needs to be available
+  # in NIX_PATH or nixos-rebuild won't be able to find them.
   combinedSrc = nixpkgs.runCommand "combinedSrc" {} ''
     mkdir $out
     ln -s ${pkgsSrc}/* $out/
-    ls -la $out/
     ln -s ${nixpkgsSrc}/nixos $out/nixos
-    ls -la $out/
   '';
 in nixpkgs // {
   nixpkgsSrc = combinedSrc;

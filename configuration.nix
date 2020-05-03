@@ -5,7 +5,7 @@
 { config, ... }:
 
 let 
-  pkgs = import /etc/nixos/pkgs {
+  pkgs = import ./pkgs {
     config.allowUnfree = true; 
   };
 in {
@@ -14,7 +14,6 @@ in {
       ./hardware/x1.nix
     ];
 
-  nixpkgs.pkgs = pkgs;
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
@@ -28,6 +27,7 @@ in {
     cleanTmpDir = true;
   };
 
+  nixpkgs.pkgs = pkgs;
   nix = {
     nixPath = [
       "nixpkgs=${pkgs.nixpkgsSrc}"
