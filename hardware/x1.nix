@@ -1,6 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
-{
+let
+  pkgs = import /etc/nixos/pkgs {
+    #config.allowUnfree = true;
+  };
+in {
   imports =
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];

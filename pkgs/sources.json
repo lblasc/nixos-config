@@ -1,0 +1,14 @@
+{
+    "nixpkgs": {
+        "branch": "x1-2020-05-01",
+        "description": "",
+        "homepage": "https://github.com/lblasc/nixpkgs",
+        "owner": "lblasc",
+        "repo": "nixpkgs",
+        "rev": "9d6829d4435268458880dac724f22c7ddace1d2c",
+        "sha256": "092aa74d7nbqfdnlj4ymxwdig8mjqpwbykmgkh2vdmdhrwlkb8ia",
+        "type": "tarball",
+        "url": "https://github.com/lblasc/nixpkgs/archive/9d6829d4435268458880dac724f22c7ddace1d2c.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}

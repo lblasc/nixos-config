@@ -2,15 +2,19 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, ... }:
 
-{
+let 
+  pkgs = import /etc/nixos/pkgs {
+    config.allowUnfree = true; 
+  };
+in {
   imports =
     [
       ./hardware/x1.nix
-      ./vscodium
     ];
 
+  nixpkgs.pkgs = pkgs;
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
@@ -24,20 +28,25 @@
     cleanTmpDir = true;
   };
 
-  nix.buildMachines = [ {
-    hostName = "builder";
-    system = "x86_64-linux";
-    maxJobs = 2;
-    speedFactor = 2;
-    supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
-    mandatoryFeatures = [ ];
-  }] ;
-  nix.distributedBuilds = true;
-  nix.extraOptions = ''
-    builders-use-substitutes = true
-  '';
+  nix = {
+    nixPath = [
+      "nixpkgs=${pkgs.nixpkgsSrc}"
+      "nixos-config=/etc/nixos/configuration.nix"
+    ];
 
-#  nixpkgs.overlays = [ (import /etc/nixos/overlays) ] ;
+    buildMachines = [{
+      hostName = "builder";
+      system = "x86_64-linux";
+      maxJobs = 2;
+      speedFactor = 2;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      mandatoryFeatures = [ ];
+    }] ;
+    distributedBuilds = true;
+    extraOptions = ''
+      builders-use-substitutes = true
+    '';
+  };
 
   networking.hostName = "x1"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -132,6 +141,18 @@
     google-chrome
 
     (luajit.override { enableGC64 = true; })
+
+    (vscode-with-extensions.override {
+      vscode = pkgs.vscodium;
+      vscodeExtensions = (with pkgs.vscode-extensions; [
+        ms-vscode-remote.remote-ssh
+        sumneko.Lua       
+        bbenoist.Nix
+        ms-python.python
+        vscodevim.vim
+        redhat.vscode-yaml
+      ]);
+    })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

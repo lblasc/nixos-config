@@ -54,7 +54,7 @@ mkfs.xfs -L root /dev/mapper/root
 # sound issues
 https://github.com/NixOS/nixpkgs/pull/86168
 
-# tmp channel
+# tmp channel, waiting for Flakes https://gist.github.com/edolstra/40da6e3a4d4ee8fd019395365e0772e7
 nix-channel --add https://github.com/NixOS/nixpkgs/archive/9d6829d.tar.gz nixos
 
 ```

@@ -1,14 +1,17 @@
-{ pkgs
-, ... }:
+{ clangStdenv 
+, vscode-utils
+, fetchFromGitHub
+, ninja
+}:
 
 let
   version = "0.16.3";
 
-  languageServer = pkgs.clangStdenv.mkDerivation {
+  languageServer = clangStdenv.mkDerivation {
     name = "lua-language-server";
     inherit version;
 
-    src = pkgs.fetchFromGitHub {
+    src = fetchFromGitHub {
       owner = "sumneko";
       repo = "lua-language-server";
       rev = "ff4fda5";
@@ -16,7 +19,7 @@ let
       fetchSubmodules = true;
     };
 
-    buildInputs = [ pkgs.ninja ];
+    buildInputs = [ ninja ];
 
     buildPhase = ''
       # remove prebuilt binaries
@@ -47,7 +50,7 @@ let
       sed -i "s~log.init(ROOT, ROOT / 'log' / 'service.log')~log.init(fs.path('/tmp/lua/lua-language-server'), fs.path('/tmp/lua-language-server') / 'log' / 'serivce.log')~" $out/main.lua 
     '';
   };
-in pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+in vscode-utils.buildVscodeMarketplaceExtension {
   mktplcRef = {
     name = "Lua";
     publisher = "sumneko";
@@ -65,6 +68,6 @@ in pkgs.vscode-utils.buildVscodeMarketplaceExtension {
   '';
 
   meta = {
-    license = pkgs.stdenv.lib.licenses.mit;
+    license = clangStdenv.lib.licenses.mit;
   };
 }
