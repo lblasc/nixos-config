@@ -5,10 +5,10 @@
         "homepage": "https://github.com/lblasc/nixpkgs",
         "owner": "lblasc",
         "repo": "nixpkgs",
-        "rev": "f0cfb9125671fbf27fa1386e8b75a1db69ee2f95",
-        "sha256": "1nky9vqd0cac90phim149ghwq9cancdjw29w0vikfsvzjahmfyg0",
+        "rev": "700e1b2fbe0a3ff2419655cab56052a50d3ea69e",
+        "sha256": "0s4m3nl3bwjf9bs5xpwxp8r2xxfg6f51qykya4qy9xsmxdmm76br",
         "type": "tarball",
-        "url": "https://github.com/lblasc/nixpkgs/archive/f0cfb9125671fbf27fa1386e8b75a1db69ee2f95.tar.gz",
+        "url": "https://github.com/lblasc/nixpkgs/archive/700e1b2fbe0a3ff2419655cab56052a50d3ea69e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

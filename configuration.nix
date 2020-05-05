@@ -139,6 +139,8 @@ in {
     alacritty
     slack
     remmina
+    flameshot
+    awscli
 
     firefox
     (chromium.override { enableVaapi = true; })
