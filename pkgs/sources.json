@@ -1,14 +1,14 @@
 {
     "nixpkgs": {
-        "branch": "yes-i-know-what-i-am-doing",
+        "branch": "master",
         "description": "nixpkgs",
-        "homepage": "https://github.com/lblasc/nixpkgs",
-        "owner": "lblasc",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "700e1b2fbe0a3ff2419655cab56052a50d3ea69e",
-        "sha256": "0s4m3nl3bwjf9bs5xpwxp8r2xxfg6f51qykya4qy9xsmxdmm76br",
+        "rev": "54eb2d10184124a8bd6cc01ff815c30aa8aebf35",
+        "sha256": "033p91c4fmzg2pcdg7rhc3dc5zblyw22w0napgs4n48hzhyy3ipx",
         "type": "tarball",
-        "url": "https://github.com/lblasc/nixpkgs/archive/700e1b2fbe0a3ff2419655cab56052a50d3ea69e.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/54eb2d10184124a8bd6cc01ff815c30aa8aebf35.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
