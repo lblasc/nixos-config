@@ -13,6 +13,10 @@ let
     nixpkgsSrc=$(nix-build /etc/nixos/pkgs -A nixpkgsSrc --no-out-link)
     exec ${config.system.build.nixos-rebuild}/bin/nixos-rebuild -I nixpkgs=$nixpkgsSrc $@
   '';
+  nixos-niv = pkgs.writeScriptBin "nixos-niv" ''
+    #!${pkgs.stdenv.shell}
+    exec ${pkgs.niv}/bin/niv -s /home/lblasc/dev/nixos-config/pkgs/sources.json $@
+  '';
 in {
   imports =
     [
@@ -160,7 +164,9 @@ in {
       ]);
     })
     nixos-rebuild
+    nixos-niv
     niv
+    bat
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
