@@ -161,6 +161,7 @@ in {
         ms-python.python
         vscodevim.vim
         redhat.vscode-yaml
+        rust-lang.rust
       ]);
     })
     nixos-rebuild
