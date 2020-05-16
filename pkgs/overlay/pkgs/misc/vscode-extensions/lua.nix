@@ -1,25 +1,26 @@
-{ clangStdenv
+{ stdenv
 , vscode-utils
 , fetchFromGitHub
 , ninja
+, clang
 }:
 
 let
-  version = "0.16.3";
+  version = "0.17.0";
 
-  languageServer = clangStdenv.mkDerivation {
+  languageServer = stdenv.mkDerivation {
     name = "lua-language-server";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "sumneko";
       repo = "lua-language-server";
-      rev = "ff4fda5";
-      sha256 = "0vz9w0m70mvgyrs18114s0g9hrq4xzmjk0vhmprg7l5xrjnvj0wf";
+      rev = "aa2c41c";
+      sha256 = "1wq1fg976frigdx0g3qfcgvx10ghsn8d9llx8vjbna0njvnyiqjf";
       fetchSubmodules = true;
     };
 
-    buildInputs = [ ninja ];
+    buildInputs = [ ninja clang ];
 
     buildPhase = ''
       # remove prebuilt binaries
@@ -55,7 +56,7 @@ in vscode-utils.buildVscodeMarketplaceExtension {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "03hrp248j8wiip1ww19bypclqzh58qv7if15lrf3r3yfavl007l0";
+    sha256 = "1s639aw3x8j9wz8rffivvpid8bbd7d77zb75y3vb9259ndxppy7q";
   };
 
   postInstall = ''
@@ -68,6 +69,6 @@ in vscode-utils.buildVscodeMarketplaceExtension {
   '';
 
   meta = {
-    license = clangStdenv.lib.licenses.mit;
+    license = stdenv.lib.licenses.mit;
   };
 }
