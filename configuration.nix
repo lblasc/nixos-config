@@ -161,8 +161,12 @@ in {
         ms-python.python
         vscodevim.vim
         redhat.vscode-yaml
-        rust-lang.rust
-      ]);
+      ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "rust";
+        publisher = "rust-lang";
+        version = "0.7.8";
+        sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
+      }];
     })
     nixos-rebuild
     nixos-niv
