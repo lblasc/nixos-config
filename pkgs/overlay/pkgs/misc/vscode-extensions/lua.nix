@@ -6,7 +6,7 @@
 }:
 
 let
-  version = "0.17.0";
+  version = "0.17.1";
 
   languageServer = stdenv.mkDerivation {
     name = "lua-language-server";
@@ -15,8 +15,8 @@ let
     src = fetchFromGitHub {
       owner = "sumneko";
       repo = "lua-language-server";
-      rev = "aa2c41c";
-      sha256 = "1wq1fg976frigdx0g3qfcgvx10ghsn8d9llx8vjbna0njvnyiqjf";
+      rev = "da43d80";
+      sha256 = "07jw8v0j7yyifivfqlfpb5rw96027i6rhv21dxhdbl54hbk4d7p0";
       fetchSubmodules = true;
     };
 
@@ -56,7 +56,7 @@ in vscode-utils.buildVscodeMarketplaceExtension {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "1s639aw3x8j9wz8rffivvpid8bbd7d77zb75y3vb9259ndxppy7q";
+    sha256 = "0k04cp0r93907ix5hz827r95g7sky44w8md3b9il9gn4z6jvmq67";
   };
 
   postInstall = ''
