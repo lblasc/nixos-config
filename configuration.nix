@@ -166,6 +166,11 @@ in {
         publisher = "rust-lang";
         version = "0.7.8";
         sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
+      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "nix-env-selector";
+        publisher = "arrterian";
+        version = "0.1.2";
+        sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
       }];
     })
     nixos-rebuild
