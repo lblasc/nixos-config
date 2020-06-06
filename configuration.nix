@@ -171,6 +171,11 @@ in {
         publisher = "arrterian";
         version = "0.1.2";
         sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "markdown-all-in-one";
+        publisher = "yzhang";
+        version = "3.0.0";
+        sha256 = "1rk8jx35bk7hwpn4mjcqb9dyspgw1y9dr3x1rnbnjzl4zci2ih3a";
       }];
     })
     nixos-rebuild
