@@ -151,9 +151,9 @@ in {
     google-chrome
 
     (luajit.override { enableGC64 = true; })
-    # vscodium with extensions
-    # remove when NixOS/nixpkgs#89196 is merged
-    (let
+
+    (vscode-with-extensions.override {
+      vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
         sumneko.Lua
@@ -171,37 +171,12 @@ in {
         publisher = "arrterian";
         version = "0.1.2";
         sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
-      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "markdown-all-in-one";
-        publisher = "yzhang";
-        version = "3.0.0";
-        sha256 = "1rk8jx35bk7hwpn4mjcqb9dyspgw1y9dr3x1rnbnjzl4zci2ih3a";
       }];
-    in pkgs.symlinkJoin {
-      name = "code";
-      paths = [
-        (pkgs.vscode-with-extensions.override {
-          vscode = pkgs.vscodium;
-          vscodeExtensions = vscodeExtensions;
-        })
-      ];
-      buildInputs = [ pkgs.makeWrapper ];
-      postBuild = ''
-        wrapProgram $out/bin/codium --add-flags "--extensions-dir ${
-          buildEnv {
-            name = "vscode-extensions";
-            paths = vscodeExtensions;
-          }
-        }/share/vscode/extensions" --prefix PATH ":" ${
-          stdenv.lib.makeBinPath [ pkgs.nixfmt ]
-        }
-      '';
     })
     nixos-rebuild
     nixos-niv
     niv
     bat
-    zoom-us
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
