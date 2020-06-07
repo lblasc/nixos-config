@@ -150,7 +150,11 @@ in {
     (chromium.override { enableVaapi = true; })
     google-chrome
 
-    (luajit.override { enableGC64 = true; })
+    # luajit GC64 repl with some common packages for quick tests
+    (let
+       luajitGC64 = luajit.override { enableGC64 = true; self = luajitGC64; };
+     in
+     luajitGC64.withPackages(ps: with ps; [ busted rapidjson lua-toml ]))
 
     (vscode-with-extensions.override {
       vscode = pkgs.vscodium;
