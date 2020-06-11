@@ -179,7 +179,7 @@ in {
         name = "markdown-all-in-one";
         publisher = "yzhang";
         version = "3.0.0";
-        sha256 = "1rk8jx35bk7hwpn4mjcqb9dyspgw1y9dr3x1rnbnjzl4zci2ih3a";
+        sha256 = "0n2j2wf25az8f1psss8p9wkkbk3s630pw24qv54fv97sgxisn5r3";
       }];
     })
     nixos-rebuild
