@@ -242,7 +242,8 @@ in {
     # Enable the X11 windowing system.
     xserver = {
       enable = true;
-      layout = "us";
+      layout = "hr";
+      xkbVariant = "us";
       dpi = 210;
 
       # Enable touchpad support.
