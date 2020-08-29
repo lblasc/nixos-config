@@ -38,6 +38,7 @@ in {
 
   nixpkgs.pkgs = pkgs;
   nix = {
+    trustedUsers = ["lblasc"];
     nixPath = [
       "nixpkgs=${pkgs.nixpkgsSrc}"
       "nixos-config=/etc/nixos/configuration.nix"
