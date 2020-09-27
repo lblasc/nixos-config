@@ -114,6 +114,15 @@ in {
     ];
   };
 
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+    };
+  };
+
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
