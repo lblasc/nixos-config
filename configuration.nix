@@ -157,7 +157,9 @@ in {
     awscli
 
     firefox
-    (chromium.override { enableVaapi = true; })
+    (chromium.override {
+      #enableVaapi = true;
+    })
     google-chrome
 
     # luajit GC64 repl with some common packages for quick tests
