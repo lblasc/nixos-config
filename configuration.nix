@@ -177,6 +177,7 @@ in {
         ms-python.python
         vscodevim.vim
         redhat.vscode-yaml
+        HashiCorp.terraform
       ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
         name = "rust";
         publisher = "rust-lang";
