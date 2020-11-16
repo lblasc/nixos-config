@@ -1,14 +1,14 @@
 {
     "nixpkgs": {
-        "branch": "master",
+        "branch": "sof-firmware-16",
         "description": "nixpkgs",
         "homepage": "https://github.com/NixOS/nixpkgs",
-        "owner": "NixOS",
+        "owner": "lblasc",
         "repo": "nixpkgs",
-        "rev": "22dd82ce98fd111a0994eede23432179bc7008ea",
-        "sha256": "1p4g4gp4iwxjmal853wy50v4rg8k25alpwx4lkzl1w760qqcpl7f",
+        "rev": "7f7b11a99a6ea2e0ee3d9ab1a8b785741137f77b",
+        "sha256": "05hwk7f9ngvapj2klkay801m7r1705q0alh6xk2pyxcxkkhvw740",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/22dd82ce98fd111a0994eede23432179bc7008ea.tar.gz",
+        "url": "https://github.com/lblasc/nixpkgs/archive/7f7b11a99a6ea2e0ee3d9ab1a8b785741137f77b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
