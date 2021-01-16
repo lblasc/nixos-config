@@ -24,7 +24,7 @@ vscode-utils.buildVscodeMarketplaceExtension {
   meta = with lib; {
     description = "Syntax highlighting and autocompletion for Terraform";
     homepage = "https://github.com/hashicorp/vscode-terraform.git";
-    license = with licenses; [ mpl ];
+    #license = with licenses; [ mpl ];
     maintainers = with maintainers; [ lblasc ];
     platforms = platforms.all;
   };
