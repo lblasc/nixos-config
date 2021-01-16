@@ -1,13 +1,14 @@
 # nixos-config
 
 Personal nixos configurations.
-No fancy `nixops`/`terraform` scripts just plain `git clone` and `rebuild-switch`.
+No fancy `nixops`/`terraform` scripts just plain `git clone` and `nixos-rebuild switch`.
 
 One oddity is that I won't be using NixOS channels instead `niv` will be
-managing `pkgs/sources.json`. Instead calling `nix-channel --update` we will have
-nice helper command `nixos-niv update`. At one point I will switch to nix flakes
-which should provide much cleaner way of managing nixpkgs versions and overlays,
-until then `niv` can gurantee reproducibility of nixpkgs.
+managing `pkgs/sources.json`. Instead calling `nix-channel --update` I will have
+nice helper command `nixos-niv update`. At one point I will switch to `nix flakes`
+(currently experimental) which should provide much cleaner way of managing
+nixpkgs versions and overlays, until then `niv` can guarantee reproducibility of nixpkgs
+(which should be relevant with this type of Linux distribution).
 
 # Quickstart
 
@@ -16,14 +17,14 @@ Install nixos in any way you like it.
 Then simply clone this repo directly to `/etc/nixos`
 or create symlink to it and set desired hostname.
 
-* **x1** workstation
+* **x1** the notebook
 * **merovingian** the server
 
 ```
 sudo -i
 mv /etc/nixos /etc/nixos.old # just in case
 git clone git@github.com:lblasc/nixos-config.git /etc/nixos
-echo -n x1 > /etc/nixos/hostname # set machine hostname
+echo -n "x1" > /etc/nixos/hostname # set machine hostname
 ```
 
 Update `hardware-configuration.nix` if needed, generated one
