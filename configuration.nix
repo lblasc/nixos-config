@@ -47,7 +47,7 @@ in {
     buildMachines = [{
       hostName = "builder";
       system = "x86_64-linux";
-      maxJobs = 2;
+      maxJobs = 20;
       speedFactor = 2;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       mandatoryFeatures = [ ];
@@ -64,13 +64,13 @@ in {
   # Powersave
   services.tlp = {
     enable = true;
-    extraConfig = ''
-      CPU_SCALING_GOVERNOR_ON_AC=powersave
-      CPU_SCALING_GOVERNOR_ON_BAT=powersave
-      ENERGY_PERF_POLICY_ON_BAT=power
-      START_CHARGE_THRESH_BAT0=60
-      STOP_CHARGE_THRESH_BAT0=85
-    '';
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      ENERGY_PERF_POLICY_ON_BAT = "power";
+      START_CHARGE_THRESH_BAT0 = 60;
+      STOP_CHARGE_THRESH_BAT0 = 85;
+    };
   };
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -79,6 +79,8 @@ in {
   #networking.useDHCP = false;
   #networking.interfaces.enp0s31f6.useDHCP = true;
   networking.interfaces.wlp0s20f3.useDHCP = true;
+
+  services.avahi.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -99,10 +101,6 @@ in {
     };
     pulseaudio.enable = true;
     pulseaudio.support32Bit = true;
-    pulseaudio.extraConfig = ''
-      load-module module-alsa-sink device=hw:0,0 channels=4
-      load-module module-alsa-source device=hw:0,6 channels=4
-    '';
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;
 
@@ -145,36 +143,35 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git
-    wget
-    vim
-    screen
-    htop
     alacritty
-    slack
-    remmina
-    flameshot
     awscli
-
+    bat
     firefox
-    (chromium.override {
-      #enableVaapi = true;
-    })
+    flameshot
+    git
     google-chrome
+    htop
+    niv
+    remmina
+    screen
+    slack
+    vim
+    wget
+    wireguard
 
-    # luajit GC64 repl with some common packages for quick tests
-    (let
-       luajitGC64 = luajit.override { enableGC64 = true; self = luajitGC64; };
-     in
-     luajitGC64.withPackages(ps: with ps; [ busted rapidjson lua-toml ]))
+    nixos-niv
+    nixos-rebuild
 
+    (chromium.override {
+      enableVaapi = true;
+    })
+    (luajit.withPackages(ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
       vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
         sumneko.Lua
         bbenoist.Nix
-        ms-python.python
         vscodevim.vim
         redhat.vscode-yaml
         HashiCorp.terraform
@@ -191,14 +188,15 @@ in {
       }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
         name = "markdown-all-in-one";
         publisher = "yzhang";
-        version = "3.0.0";
-        sha256 = "0n2j2wf25az8f1psss8p9wkkbk3s630pw24qv54fv97sgxisn5r3";
+        version = "3.3.0";
+        sha256 = "0jq6zvppg6pagrzqisx3h3ra2x92x72xli41jmd464wr5jwrg0ls";
+      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "spellright";
+        publisher = "ban";
+        version = "3.0.56";
+        sha256 = "0y0plri6z7l49h4j4q071hn7khf9j9r9h3mhz0y96xd0na4f2k3v";
       }];
     })
-    nixos-rebuild
-    nixos-niv
-    niv
-    bat
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
