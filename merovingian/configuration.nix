@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -18,15 +19,6 @@
   # boot.loader.efi.efiSysMountPoint = "/boot/efi";
   # Define on which hard drive you want to install Grub.
   boot.loader.grub.devices = [ "/dev/sda" ]; # or "nodev" for efi only
-
-  nixpkgs.pkgs = pkgs;
-
-  nix = {
-    nixPath = [
-      "nixpkgs=${pkgs.nixpkgsSrc}"
-      "nixos-config=/etc/nixos/configuration.nix"
-    ];
-  };
 
   networking.hostName = "merovingian"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -69,17 +61,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget
-    vim
-    git
-    bat
-    screen
-    htop
-    wget
-    wireguard
-
-    nixos-niv
-    nixos-rebuild
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -89,10 +70,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  programs = {
-    vim.defaultEditor = true;
-  };
 
   # List services that you want to enable:
 

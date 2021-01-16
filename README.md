@@ -3,42 +3,48 @@
 Personal nixos configurations.
 No fancy `nixops`/`terraform` scripts just plain `git clone` and `rebuild-switch`.
 
+One oddity is that I won't be using NixOS channels instead `niv` will be
+managing `pkgs/sources.json`. Instead calling `nix-channel --update` we will have
+nice helper command `nixos-niv update`. At one point I will switch to nix flakes
+which should provide much cleaner way of managing nixpkgs versions and overlays,
+until then `niv` can gurantee reproducibility of nixpkgs.
+
 # Quickstart
 
 Install nixos in any way you like it.
 
 Then simply clone this repo directly to `/etc/nixos`
-or create symlink to it.
+or create symlink to it and set desired hostname.
+
+* **x1** workstation
+* **merovingian** the server
 
 ```
 sudo -i
 mv /etc/nixos /etc/nixos.old # just in case
 git clone git@github.com:lblasc/nixos-config.git /etc/nixos
-cp /etc/nixos/configuration.nix.sample /etc/nixos/configuration.nix
-# edit /etc/nixos/configuration.nix and adjust machine hostname
+echo -n x1 > /etc/nixos/hostname # set machine hostname
 ```
-
-Machines:
-
-* **x1** workstation
-* **merovingian** the server
 
 Update `hardware-configuration.nix` if needed, generated one
 can be found in `/etc/nixos.old`
 
-We are ready to finish setup.
+Only for the first time `nixos-rebuild switch` needs to be
+explicitly runned with `nixpkgs` path provided by `niv`!
+Afterwards it won't be necessary to specify it.
 
 ```
-nixos rebuild-switch
+nixpkgsSrc=$(nix-build /etc/nixos/pkgs -A nixpkgsSrc --no-out-link)
+nixos-rebuild -I nixpkgs=$nixpkgsSrc switch
 ```
+
+At this point we should have our system up and running!
 
 It is a good practice to edit and commit files with
 unprivileged user not root account.
 ```
 chown -R lblasc: -R /etc/nixos
 ```
-
-We are done!
 
 ## instalation notes for x1
 

@@ -4,7 +4,6 @@
 , ninja
 , clang
 }:
-
 let
   version = "1.0.5";
 
@@ -51,7 +50,8 @@ let
       sed -i "s~log.init(ROOT, ROOT / 'log' / 'service.log')~log.init(fs.path('/tmp/lua/lua-language-server'), fs.path('/tmp/lua-language-server') / 'log' / 'serivce.log')~" $out/main.lua
     '';
   };
-in vscode-utils.buildVscodeMarketplaceExtension {
+in
+vscode-utils.buildVscodeMarketplaceExtension {
   mktplcRef = {
     name = "Lua";
     publisher = "sumneko";

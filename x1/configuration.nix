@@ -7,7 +7,6 @@
 {
   imports =
     [
-      ../common.nix
       ./hardware-configuration.nix
     ];
 
@@ -24,14 +23,7 @@
     cleanTmpDir = true;
   };
 
-  nixpkgs.pkgs = pkgs;
-
   nix = {
-    nixPath = [
-      "nixpkgs=${pkgs.nixpkgsSrc}"
-      "nixos-config=/etc/nixos/configuration.nix"
-    ];
-
     buildMachines = [{
       hostName = "builder";
       system = "x86_64-linux";
@@ -39,7 +31,7 @@
       speedFactor = 2;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       mandatoryFeatures = [ ];
-    }] ;
+    }];
     distributedBuilds = true;
     extraOptions = ''
       builders-use-substitutes = true
@@ -47,7 +39,7 @@
   };
 
   networking.hostName = "x1"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Powersave
   services.tlp = {
@@ -109,6 +101,9 @@
     };
   };
 
+  # additional groups for my user
+  users.users.lblasc.extraGroups = [ "wheel" "audio" "video" ];
+
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -122,7 +117,7 @@
   # Fix sizes of GTK/GNOME ui elements
   environment.variables = {
     GDK_SCALE = "2";
-    GDK_DPI_SCALE= "0.5";
+    GDK_DPI_SCALE = "0.5";
   };
 
   # Set your time zone.
@@ -133,27 +128,16 @@
   environment.systemPackages = with pkgs; [
     alacritty
     awscli
-    bat
     firefox
     flameshot
-    git
     google-chrome
-    htop
-    niv
     remmina
-    screen
     slack
-    vim
-    wget
-    wireguard
-
-    nixos-niv
-    nixos-rebuild
 
     (chromium.override {
       enableVaapi = true;
     })
-    (luajit.withPackages(ps: with ps; [ busted rapidjson lua-toml ]))
+    (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
       vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
@@ -196,7 +180,6 @@
   #   pinentryFlavor = "gnome3";
   # };
   programs = {
-    vim.defaultEditor = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
@@ -277,4 +260,3 @@
   system.stateVersion = "20.03"; # Did you read the comment?
 
 }
-
