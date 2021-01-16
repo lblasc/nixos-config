@@ -11,14 +11,12 @@
       ./hardware-configuration.nix
     ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.devices = [ "/dev/sda" ]; # or "nodev" for efi only
+  boot = {
+    loader.grub.enable = true;
+    loader.grub.version = 2;
+    loader.grub.devices = [ "/dev/sda" ]; # or "nodev" for efi only
+    kernelPackages = pkgs.linuxPackages_5_10;
+  };
 
   networking.hostName = "merovingian"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
