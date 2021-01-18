@@ -1,0 +1,20 @@
+keys:
+  - &lblasc 543EDA86049E3767E206DAA44544955DC9C6B0AE
+  - &x1 46EB70205EA314EE95C79CBE7B4C8B27811C5696
+  - &merovingian 915ee3320fe9ddab2d84dc8e66bac9ae02c06743
+
+creation_rules:
+  - path_regex: admin/secrets/[^/]+\.yaml$
+    key_groups:
+    - pgp:
+      - *lblasc
+  - path_regex: x1/secrets/[^/]+\.yaml$
+    key_groups:
+    - pgp:
+      - *lblasc
+      - *x1
+  - path_regex: merovingian/secrets/[^/]+\.yaml$
+    key_groups:
+    - pgp:
+      - *lblasc
+      - *merovingian

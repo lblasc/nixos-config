@@ -74,11 +74,31 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # sops
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    secrets.wireguard-private-key = { };
+  };
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedUDPPorts = [ 51820 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "fd::1/64" ];
+      listenPort = 51820;
+      privateKeyFile = config.sops.secrets.wireguard-private-key.path;
+      peers = [
+        {
+          publicKey = "Q7KG/MeHoyIN58WmZQm9llUbTojkdmm7sQ6Lzzfl0U0=";
+          allowedIPs = [ "fd::2/128" ];
+        }
+      ];
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

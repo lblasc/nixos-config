@@ -102,7 +102,7 @@
   };
 
   # additional groups for my user
-  users.users.lblasc.extraGroups = [ "wheel" "audio" "video" ];
+  users.users.lblasc.extraGroups = [ "audio" "video" ];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -199,10 +199,13 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 3000 5556 5558 ];
+  networking.firewall = {
+    allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
+  };
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -249,6 +252,27 @@
 
     };
 
+  };
+
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    secrets.wireguard-private-key = { };
+  };
+
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "fd::2/64" ];
+      listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
+      privateKeyFile = config.sops.secrets.wireguard-private-key.path;
+      peers = [
+        {
+          publicKey = "ENP/VXsNXT1mW9622KqsgNdbzxjXeIwQ3+TxTPx1lyI=";
+          allowedIPs = [ "::/0" ];
+          endpoint = "168.119.229.37:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
   };
 
   # This value determines the NixOS release from which the default

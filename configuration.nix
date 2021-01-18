@@ -21,6 +21,7 @@ in
   imports =
     [
       "/etc/nixos/${hostname}/configuration.nix"
+      "${pkgs.sources.sops-nix}/modules/sops"
       ./common.nix
     ];
 

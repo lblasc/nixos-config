@@ -1,7 +1,7 @@
 # nixos-config
 
 Personal nixos configurations.
-No fancy `nixops`/`terraform` scripts just plain `git clone` and `nixos-rebuild switch`.
+No fancy `nixops`/`terraform` scripts (for now) just plain `git clone` and `nixos-rebuild switch`.
 
 One oddity is that I won't be using NixOS channels instead `niv` will be
 managing `pkgs/sources.json`. Instead calling `nix-channel --update` I will have

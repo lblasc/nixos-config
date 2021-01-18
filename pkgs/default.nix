@@ -9,6 +9,7 @@ let
   nixpkgs = import nixpkgsSrc {
     config = config;
     overlays = [
+      (self: super: { inherit sources; })
       # local overlay
       (import ./overlay)
     ] ++ overlays;
