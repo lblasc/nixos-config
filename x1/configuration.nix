@@ -261,13 +261,13 @@
 
   networking.wireguard.interfaces = {
     wg0 = {
-      ips = [ "fd::2/64" ];
+      ips = [ "fd::2/64" "fd00:b0a7::11/64" ];
       listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
       privateKeyFile = config.sops.secrets.wireguard-private-key.path;
       peers = [
         {
           publicKey = "ENP/VXsNXT1mW9622KqsgNdbzxjXeIwQ3+TxTPx1lyI=";
-          allowedIPs = [ "::/0" ];
+          allowedIPs = [ "fd::/64" "fd00:b0a7::/64" ];
           endpoint = "168.119.229.37:51820";
           persistentKeepalive = 25;
         }
