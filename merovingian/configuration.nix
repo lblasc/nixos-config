@@ -88,13 +88,25 @@
 
   networking.wireguard.interfaces = {
     wg0 = {
-      ips = [ "fd::1/64" ];
+      ips = [ "fd::1/64" "fd00:b0a7::10/64" ];
       listenPort = 51820;
       privateKeyFile = config.sops.secrets.wireguard-private-key.path;
       peers = [
         {
           publicKey = "Q7KG/MeHoyIN58WmZQm9llUbTojkdmm7sQ6Lzzfl0U0=";
-          allowedIPs = [ "fd::2/128" ];
+          allowedIPs = [ "fd::2/128" "fd00:b0a7::11/128" ];
+        }
+        {
+          publicKey = "a4+WwNTSgoxdK3elt3SvXCkhdXJm/KPql9IRgtLjImQ=";
+          allowedIPs = [ "fd00:b0a7::3/128" ];
+        }
+        {
+          publicKey = "EnHHRrZPCdnz3cwksycqReqs4mz0ltXNLn4vapUmB04=";
+          allowedIPs = [ "fd00:b0a7::2/128" ];
+        }
+        {
+          publicKey = "NCgM5BjeiakPA0IYJg0qZoqTbPxfr6rGKxmJw2rRpAw=";
+          allowedIPs = [ "fd00:b0a7::1/128" ];
         }
       ];
     };
