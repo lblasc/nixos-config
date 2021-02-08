@@ -23,4 +23,3 @@ stdenv.mkDerivation {
     maintainers = with maintainers; [ lblasc ];
   };
 }
-

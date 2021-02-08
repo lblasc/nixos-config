@@ -1,62 +1,30 @@
-{ stdenv
+{ lib
 , vscode-utils
 , fetchFromGitHub
-, ninja
-, clang
+, sumneko-lua-language-server
 }:
 let
-  version = "1.0.5";
+  version = "1.14.2";
 
-  languageServer = stdenv.mkDerivation {
-    name = "lua-language-server";
+  languageServer = sumneko-lua-language-server.overrideAttrs (old: {
     inherit version;
 
     src = fetchFromGitHub {
       owner = "sumneko";
       repo = "lua-language-server";
-      rev = "ccb4713";
-      sha256 = "0bqwdnd9zklb9h42rba7miknr6w38kl5f232427xak4igyzvydgq";
+      rev = version;
+      sha256 = "0rqqbr2vqjcbsz8psvskz2lwv2klnfbv7izxa8ygg5ws9wnymm78";
       fetchSubmodules = true;
     };
 
-    buildInputs = [ ninja clang ];
-
-    buildPhase = ''
-      # remove prebuilt binaries
-      rm -rf bin
-      # First thing I tried was separating luamake into its own
-      # expression, believe me it was a bad idea..
-      # This project is full of hardcoded paths and tackling whit it
-      # will create a big messy pile of patches, so I followed the
-      # author's funky way of doing things..
-      cd 3rd/luamake/
-      ninja -f ninja/linux.ninja
-      cd ../../
-      ./3rd/luamake/luamake rebuild
-    '';
-
-    installPhase = ''
-      # not needed
-      rm -rf build
-      rm -rf ./3rd/luamake
-
-      # just copy the mess
-      mkdir $out
-      cp -vr . $out/
-
-      # "only" thing left is to tell log module to use /tmp dir
-      # instead of store path which is read only
-      sed -i "s~ROOT~fs.path('/tmp/lua-language-server')~g" $out/script/workspace.lua
-      sed -i "s~log.init(ROOT, ROOT / 'log' / 'service.log')~log.init(fs.path('/tmp/lua/lua-language-server'), fs.path('/tmp/lua-language-server') / 'log' / 'serivce.log')~" $out/main.lua
-    '';
-  };
+  });
 in
 vscode-utils.buildVscodeMarketplaceExtension {
   mktplcRef = {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "03m6i2isw43ic6kgal5s44adx69amz6gx7af0a1wvdmj5kxlckh9";
+    sha256 = "1n15gdrgcbgm4jd2895gxkx4m7khh1bplh76q1lq9f6n5qh5fdc8";
   };
 
   postInstall = ''
@@ -64,11 +32,11 @@ vscode-utils.buildVscodeMarketplaceExtension {
     sed -i '/fs.chmodSync/d' $out/$installPrefix/client/out/languageserver.js
 
     # extension comes with prebuild language server
-    rm -rf $out/$installPrefix/server
-    ln -s ${languageServer} $out/$installPrefix/server
+    rm -rf $out/$installPrefix/server/bin/Linux
+    ln -s ${languageServer}/bin $out/$installPrefix/server/bin/Linux
   '';
 
   meta = {
-    license = stdenv.lib.licenses.mit;
+    license = lib.licenses.mit;
   };
 }
