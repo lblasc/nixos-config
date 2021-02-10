@@ -4,7 +4,7 @@
 , sumneko-lua-language-server
 }:
 let
-  version = "1.14.2";
+  version = "1.15.0";
 
   languageServer = sumneko-lua-language-server.overrideAttrs (old: {
     inherit version;
@@ -13,7 +13,7 @@ let
       owner = "sumneko";
       repo = "lua-language-server";
       rev = version;
-      sha256 = "0rqqbr2vqjcbsz8psvskz2lwv2klnfbv7izxa8ygg5ws9wnymm78";
+      sha256 = "198vqk2xj8phal20nxp7h14harpfvmfl4ah63219izz8fy5rmfkc";
       fetchSubmodules = true;
     };
 
@@ -24,7 +24,7 @@ vscode-utils.buildVscodeMarketplaceExtension {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "1n15gdrgcbgm4jd2895gxkx4m7khh1bplh76q1lq9f6n5qh5fdc8";
+    sha256 = "1sxk1qjv8izd373ny848n1n3sh9ij354bhckr29lszgj4f3s956n";
   };
 
   postInstall = ''
