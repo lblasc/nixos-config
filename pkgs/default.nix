@@ -18,7 +18,7 @@ let
   # Combine local `pkgs` expressions with `nixos` modules
   # from `nixpkgs`. Nixos modules needs to be available
   # in NIX_PATH or nixos-rebuild won't be able to find them.
-  combinedSrc = nixpkgs.runCommand "combinedSrc" { } ''
+  combinedSrc = nixpkgs.runCommandNoCCLocal "combinedSrc" { } ''
     mkdir $out
     ln -s ${pkgsSrc}/* $out/
     ln -s ${nixpkgsSrc}/nixos $out/nixos
