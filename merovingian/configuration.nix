@@ -16,6 +16,7 @@
     loader.grub.version = 2;
     loader.grub.devices = [ "/dev/sda" ]; # or "nodev" for efi only
     kernelPackages = pkgs.linuxPackages_5_10;
+    kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
   };
 
   networking.hostName = "merovingian"; # Define your hostname.
