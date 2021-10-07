@@ -15,8 +15,17 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
+    kernelPackages = pkgs.linuxPackages_5_14;
+    #kernelPackages = pkgs.linuxPackages_latest;
+    extraModulePackages = with config.boot.kernelPackages; [ (acpi_call.overrideAttrs (old: {
+      version = "1.2.2-pre";
+      src = pkgs.fetchFromGitHub {
+        owner = "nix-community";
+        repo = "acpi_call";
+        rev = "9f1c0b5d046bdfdec769809435257647fd475473";
+        sha256 = "1s7h9y3adyfhw7cjldlfmid79lrwz3vqlvziw9nwd6x5qdj4w9vp";
+      };
+    })) ];
 
     plymouth.enable = true;
 
@@ -29,17 +38,24 @@
       system = "x86_64-linux";
       maxJobs = 20;
       speedFactor = 2;
-      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      supportedFeatures = [ "benchmark" "big-parallel" ];
       mandatoryFeatures = [ ];
     }];
     distributedBuilds = true;
     extraOptions = ''
       builders-use-substitutes = true
+      netrc-file = /etc/netrc
     '';
   };
 
+  #networking.resolvconf.dnsExtensionMechanism = false;
+
   networking.hostName = "x1"; # Define your hostname.
-  networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
+  networking.wireless = {
+    enable = true; # Enables wireless support via wpa_supplicant.
+    interfaces = [ "wlp0s20f3" ];
+   # interfaces = [ "wlp0s20f0u2u3" ];
+  };
 
   # Powersave
   services.tlp = {
@@ -92,17 +108,13 @@
     ];
   };
 
-  virtualisation = {
-    podman = {
-      enable = true;
-
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-    };
-  };
+  virtualisation.docker.enable = false;
+  virtualisation.podman.enable = true;
+  virtualisation.podman.dockerSocket.enable = true;
+  virtualisation.podman.defaultNetwork.dnsname.enable = true;
 
   # additional groups for my user
-  users.users.lblasc.extraGroups = [ "audio" "video" ];
+  users.users.lblasc.extraGroups = [ "audio" "video" "podman" ];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -112,14 +124,6 @@
     earlySetup = true;
   };
 
-  fonts.fontconfig.dpi = 210;
-
-  # Fix sizes of GTK/GNOME ui elements
-  environment.variables = {
-    GDK_SCALE = "2";
-    GDK_DPI_SCALE = "0.5";
-  };
-
   # Set your time zone.
   time.timeZone = "Europe/Zagreb";
 
@@ -127,27 +131,32 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     alacritty
+    arion
     awscli
+    docker-client
     firefox
     flameshot
     google-chrome
     remmina
-    slack
+    podman
 
-    (chromium.override {
-      enableVaapi = true;
-    })
+    chromium
     (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
       vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
         sumneko.Lua
-        bbenoist.Nix
+        jnoortheen.nix-ide
         vscodevim.vim
         redhat.vscode-yaml
-        HashiCorp.terraform
+        hashicorp.terraform
       ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "markdown-emoji";
+        publisher = "bierner";
+        version = "0.1.0";
+        sha256 = "1y599hmi7ngamvvkwwi9ax4hyzc0hgzp51j52vlrwri6805fwr9y";
+      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
         name = "rust";
         publisher = "rust-lang";
         version = "0.7.8";
@@ -211,7 +220,8 @@
   # networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  #services.printing.enable = true;
+  #services.printing.drivers = [ pkgs.xerox-workcentre-3045b-3045ni ];
 
   # Enable sound.
   sound = {
@@ -274,6 +284,7 @@
       ];
     };
   };
+
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
