@@ -140,7 +140,12 @@
     remmina
     podman
 
-    chromium
+    (pkgs.writeScriptBin "chromium"
+    ''
+      exec ${chromium}/bin/chromium \
+        --enable-features=VaapiVideoDecoder
+    '')
+
     (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
       vscode = pkgs.vscodium;
