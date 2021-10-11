@@ -16,8 +16,8 @@ let
     src = fetchFromGitHub {
       owner = "sumneko";
       repo = "lua-language-server";
-      rev = "70335a4";
-      sha256 = "1zmzf6ycmpgk4girb0kjlg12k5mdbhxzkjvkyr756mjik3zcf626";
+      rev = "77bf688";
+      sha256 = "19ag78xfi7hrjzhsimizd3ma8m2ic2dbh20i3z3zxlqgnf06kagk";
       fetchSubmodules = true;
     };
 
