@@ -33,6 +33,7 @@
   };
 
   nix = {
+    package = pkgs.nix_2_4;
     buildMachines = [{
       hostName = "builder";
       system = "x86_64-linux";
@@ -43,6 +44,7 @@
     }];
     distributedBuilds = true;
     extraOptions = ''
+      experimental-features = nix-command flakes
       builders-use-substitutes = true
       netrc-file = /etc/netrc
     '';
