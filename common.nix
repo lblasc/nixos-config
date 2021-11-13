@@ -1,9 +1,12 @@
 { config, pkgs, ... }:
 
 {
-
   nix = {
+    package = pkgs.nix_2_4;
     trustedUsers = [ "lblasc" ];
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

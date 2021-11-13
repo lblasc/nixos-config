@@ -8,6 +8,7 @@
   imports =
     [
       ./hardware-configuration.nix
+      ../common.nix
     ];
 
   boot = {
@@ -17,15 +18,17 @@
 
     kernelPackages = pkgs.linuxPackages_5_14;
     #kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with config.boot.kernelPackages; [ (acpi_call.overrideAttrs (old: {
-      version = "1.2.2-pre";
-      src = pkgs.fetchFromGitHub {
-        owner = "nix-community";
-        repo = "acpi_call";
-        rev = "9f1c0b5d046bdfdec769809435257647fd475473";
-        sha256 = "1s7h9y3adyfhw7cjldlfmid79lrwz3vqlvziw9nwd6x5qdj4w9vp";
-      };
-    })) ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      (acpi_call.overrideAttrs (old: {
+        version = "1.2.2-pre";
+        src = pkgs.fetchFromGitHub {
+          owner = "nix-community";
+          repo = "acpi_call";
+          rev = "9f1c0b5d046bdfdec769809435257647fd475473";
+          sha256 = "1s7h9y3adyfhw7cjldlfmid79lrwz3vqlvziw9nwd6x5qdj4w9vp";
+        };
+      }))
+    ];
 
     plymouth.enable = true;
 
@@ -33,7 +36,6 @@
   };
 
   nix = {
-    package = pkgs.nix_2_4;
     buildMachines = [{
       hostName = "builder";
       system = "x86_64-linux";
@@ -44,7 +46,6 @@
     }];
     distributedBuilds = true;
     extraOptions = ''
-      experimental-features = nix-command flakes
       builders-use-substitutes = true
       netrc-file = /etc/netrc
     '';
@@ -56,7 +57,7 @@
   networking.wireless = {
     enable = true; # Enables wireless support via wpa_supplicant.
     interfaces = [ "wlp0s20f3" ];
-   # interfaces = [ "wlp0s20f0u2u3" ];
+    # interfaces = [ "wlp0s20f0u2u3" ];
   };
 
   # Powersave
@@ -143,10 +144,10 @@
     podman
 
     (pkgs.writeScriptBin "chromium"
-    ''
-      exec ${chromium}/bin/chromium \
-        --enable-features=VaapiVideoDecoder
-    '')
+      ''
+        exec ${chromium}/bin/chromium \
+          --enable-features=VaapiVideoDecoder
+      '')
 
     (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
