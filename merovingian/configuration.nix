@@ -70,6 +70,18 @@
   #   enableSSHSupport = true;
   # };
 
+  security.sudo.extraRules = [
+    {
+      users = [ "lblasc" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
