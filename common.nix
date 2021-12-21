@@ -2,7 +2,7 @@
 
 {
   nix = {
-    package = pkgs.nix_2_4;
+    package = pkgs.nix_2_5;
     trustedUsers = [ "lblasc" ];
     extraOptions = ''
       experimental-features = nix-command flakes
