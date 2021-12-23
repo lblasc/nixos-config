@@ -9,6 +9,7 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./matrix.nix
     ];
 
   boot = {
@@ -20,6 +21,7 @@
   };
 
   networking.hostName = "merovingian"; # Define your hostname.
+  networking.domain = "znode.net";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
@@ -30,6 +32,9 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true;
+
+  security.acme.acceptTerms = true;
+  security.acme.email = "lblasc@znode.net";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
