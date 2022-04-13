@@ -13,7 +13,7 @@ vscode-utils.buildVscodeMarketplaceExtension {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "sha256-cnH2DqbCECupWoEm0ThXpihQ1zcR/LpP9HmmI44wC8w=";
+    sha256 = "sha256-ASiRBpiN+NCsd0wG+8UWGwYJ25jt8vjpXlPjGfB3hEU=";
   };
 
   postInstall = ''

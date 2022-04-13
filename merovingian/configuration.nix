@@ -34,7 +34,7 @@
   networking.interfaces.ens3.useDHCP = true;
 
   security.acme.acceptTerms = true;
-  security.acme.email = "lblasc@znode.net";
+  security.acme.defaults.email = "lblasc@znode.net";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";

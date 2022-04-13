@@ -5,34 +5,49 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, sops-nix }:
+  outputs = { self, nixpkgs, sops-nix, ... }:
     let
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
-        overlays = [ (import ./pkgs/overlay) ];
-      };
+      overlays = [ (import ./pkgs/overlay) ];
     in
     {
       nixosConfigurations = {
-        x1 = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          inherit pkgs;
-          modules = [
-            ./common.nix
-            ./x1/configuration.nix
-            sops-nix.nixosModules.sops
-          ];
-        };
-        merovingian = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          inherit pkgs;
-          modules = [
-            ./common.nix
-            ./merovingian/configuration.nix
-            sops-nix.nixosModules.sops
-          ];
-        };
+        x1 = let system = "x86_64-linux"; in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+            pkgs = import nixpkgs {
+              inherit system overlays;
+              config.allowUnfree = true;
+            };
+            modules = [
+              ./common.nix
+              ./x1/configuration.nix
+              sops-nix.nixosModules.sops
+            ];
+          };
+        merovingian = let system = "x86_64-linux"; in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+            pkgs = import nixpkgs {
+              inherit system overlays;
+            };
+            modules = [
+              ./common.nix
+              ./merovingian/configuration.nix
+              sops-nix.nixosModules.sops
+            ];
+          };
+        #pajo = let system = "aarch64-linux"; in
+        #  nixpkgs.lib.nixosSystem {
+        #    inherit system;
+        #    pkgs = import nixpkgs {
+        #      inherit system overlays;
+        #    };
+        #    modules = [
+        #      ./common.nix
+        #      ./pajo/configuration.nix
+        #      sops-nix.nixosModules.sops
+        #    ];
+        #  };
       };
     };
 }

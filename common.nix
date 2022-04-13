@@ -2,8 +2,8 @@
 
 {
   nix = {
-    package = pkgs.nix_2_5;
-    trustedUsers = [ "lblasc" ];
+    package = pkgs.nix_2_6;
+    settings.trusted-users = [ "lblasc" ];
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -27,7 +27,7 @@
     screen
     vim
     wget
-    wireguard
+    wireguard-tools
   ];
 
   programs = {
