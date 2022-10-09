@@ -110,13 +110,8 @@
     ];
   };
 
-  virtualisation.docker.enable = false;
-  virtualisation.podman.enable = true;
-  virtualisation.podman.dockerSocket.enable = true;
-  virtualisation.podman.defaultNetwork.dnsname.enable = true;
-
   # additional groups for my user
-  users.users.lblasc.extraGroups = [ "audio" "video" "podman" ];
+  users.users.lblasc.extraGroups = [ "audio" "video" ];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -158,32 +153,11 @@
         vscodevim.vim
         redhat.vscode-yaml
         hashicorp.terraform
-      ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "markdown-emoji";
-        publisher = "bierner";
-        version = "0.1.0";
-        sha256 = "1y599hmi7ngamvvkwwi9ax4hyzc0hgzp51j52vlrwri6805fwr9y";
-      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "rust";
-        publisher = "rust-lang";
-        version = "0.7.8";
-        sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
-      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "nix-env-selector";
-        publisher = "arrterian";
-        version = "0.1.2";
-        sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
-      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "markdown-all-in-one";
-        publisher = "yzhang";
-        version = "3.3.0";
-        sha256 = "0jq6zvppg6pagrzqisx3h3ra2x92x72xli41jmd464wr5jwrg0ls";
-      }] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-        name = "spellright";
-        publisher = "ban";
-        version = "3.0.56";
-        sha256 = "0y0plri6z7l49h4j4q071hn7khf9j9r9h3mhz0y96xd0na4f2k3v";
-      }];
+        arrterian.nix-env-selector
+        bierner.markdown-emoji
+        yzhang.markdown-all-in-one
+        streetsidesoftware.code-spell-checker
+      ]);
     })
   ];
 
