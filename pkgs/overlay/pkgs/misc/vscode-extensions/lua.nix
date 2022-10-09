@@ -3,6 +3,8 @@
 , fetchFromGitHub
 , sumneko-lua-language-server
 }:
+# switch to upstream package
+# see: https://github.com/NixOS/nixpkgs/pull/195186
 let
   version = languageServer.version;
 
