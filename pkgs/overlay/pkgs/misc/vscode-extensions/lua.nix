@@ -13,12 +13,12 @@ vscode-utils.buildVscodeMarketplaceExtension {
     name = "Lua";
     publisher = "sumneko";
     inherit version;
-    sha256 = "sha256-ASiRBpiN+NCsd0wG+8UWGwYJ25jt8vjpXlPjGfB3hEU=";
+    sha256 = "sha256-Unzs9rX/0MlQprSvScdBCCFMeLCaGzWsMbcFqSKY2XY=";
   };
 
   postInstall = ''
     # don't run chmod in store
-    sed -i '/fs.chmodSync/d' $out/$installPrefix/client/out/languageserver.js
+    sed -i '/fs.promises.chmod/d' $out/$installPrefix/client/out/languageserver.js
 
     # extension comes with prebuild language server
     rm -f $out/$installPrefix/server/bin/lua-language-server
