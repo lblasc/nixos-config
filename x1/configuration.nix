@@ -15,18 +15,10 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_5_15;
+    kernelPackages = pkgs.linuxPackages_6_0;
     #kernelPackages = pkgs.linuxPackages_latest;
     extraModulePackages = with config.boot.kernelPackages; [
-      (acpi_call.overrideAttrs (old: {
-        version = "1.2.2-pre";
-        src = pkgs.fetchFromGitHub {
-          owner = "nix-community";
-          repo = "acpi_call";
-          rev = "9f1c0b5d046bdfdec769809435257647fd475473";
-          sha256 = "1s7h9y3adyfhw7cjldlfmid79lrwz3vqlvziw9nwd6x5qdj4w9vp";
-        };
-      }))
+      acpi_call
     ];
 
     plymouth.enable = true;
@@ -48,6 +40,12 @@
       builders-use-substitutes = true
       netrc-file = /etc/netrc
     '';
+    settings.trusted-public-keys = [
+      "hydra.tvbeat.com:4iHmKDd95QN9Po2FzqmfUD11Wk0/ln1oLlaLXDaIsNE="
+    ];
+    settings.substituters = [
+      "https://tvbeat-nixpkgs-cache.s3-eu-west-1.amazonaws.com/"
+    ];
   };
 
   #networking.resolvconf.dnsExtensionMechanism = false;
@@ -102,12 +100,16 @@
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;
 
-    opengl.extraPackages = with pkgs; [
-      vaapiIntel
-      vaapiVdpau
-      libvdpau-va-gl
-      intel-media-driver
-    ];
+    opengl =  {
+      enable = true;
+      driSupport = true;
+      extraPackages = with pkgs; [
+        vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+        intel-media-driver
+      ];
+    };
   };
 
   # additional groups for my user
@@ -135,7 +137,7 @@
     flameshot
     google-chrome
     remmina
-    podman
+    nil
 
     (pkgs.writeScriptBin "chromium"
       ''
@@ -148,7 +150,7 @@
       vscode = pkgs.vscodium;
       vscodeExtensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
-        sumneko.Lua
+        sumneko.lua
         jnoortheen.nix-ide
         vscodevim.vim
         redhat.vscode-yaml
@@ -210,6 +212,8 @@
   };
 
   services = {
+    # https://github.com/NixOS/nixpkgs/issues/135888
+    nscd.enableNsncd = true;
     fwupd.enable = true;
     physlock = {
       allowAnyUser = true;
@@ -221,6 +225,7 @@
       layout = "hr";
       xkbVariant = "us";
       dpi = 210;
+      videoDrivers = [ "modesetting" ];
 
       # Enable touchpad support.
       libinput.enable = true;
