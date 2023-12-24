@@ -21,9 +21,7 @@
       acpi_call
     ];
 
-    plymouth.enable = true;
-
-    cleanTmpDir = true;
+    tmp.cleanOnBoot = true;
   };
 
   nix = {
@@ -38,7 +36,6 @@
     distributedBuilds = true;
     extraOptions = ''
       builders-use-substitutes = true
-      netrc-file = /etc/netrc
     '';
     settings.trusted-public-keys = [
       "hydra.tvbeat.com:4iHmKDd95QN9Po2FzqmfUD11Wk0/ln1oLlaLXDaIsNE="
@@ -48,8 +45,6 @@
     ];
   };
 
-  #networking.resolvconf.dnsExtensionMechanism = false;
-
   networking.hostName = "x1"; # Define your hostname.
   networking.wireless = {
     enable = true; # Enables wireless support via wpa_supplicant.
@@ -57,17 +52,12 @@
     # interfaces = [ "wlp0s20f0u2u3" ];
   };
 
-  # Powersave
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-      ENERGY_PERF_POLICY_ON_BAT = "power";
-      START_CHARGE_THRESH_BAT0 = 60;
-      STOP_CHARGE_THRESH_BAT0 = 85;
-    };
-  };
+  services.throttled.enable = true;
+
+  # battery charge threshold
+  # echo 90 > /sys/class/power_supply/BAT0/charge_control_end_threshold
+  # echo 75 > /sys/class/power_supply/BAT0/charge_control_start_threshold
+  services.auto-cpufreq.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -83,10 +73,6 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # https://nixos.wiki/wiki/Accelerated_Video_Playback
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-
   hardware = {
     trackpoint = {
       enable = true;
@@ -95,16 +81,16 @@
       sensitivity = 255;
       speed = 255;
     };
-    pulseaudio.enable = true;
-    pulseaudio.support32Bit = true;
+    #pulseaudio.enable = true;
+    #pulseaudio.support32Bit = true;
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;
 
-    opengl =  {
+    opengl = {
       enable = true;
       driSupport = true;
       extraPackages = with pkgs; [
-        vaapiIntel
+        (vaapiIntel.override { enableHybridCodec = true; })
         vaapiVdpau
         libvdpau-va-gl
         intel-media-driver
@@ -130,14 +116,13 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     alacritty
-    arion
+    auto-cpufreq
     awscli
-    docker-client
     firefox
     flameshot
-    google-chrome
-    remmina
     nil
+    remmina
+    google-chrome
 
     (pkgs.writeScriptBin "chromium"
       ''
@@ -145,11 +130,22 @@
           --enable-features=VaapiVideoDecoder
       '')
 
+
+    (pkgs.writeScriptBin "google-chrome"
+      ''
+        exec ${google-chrome}/bin/google-chrome-stable \
+          --enable-features=VaapiVideoDecoder \
+          --disable-gpu-driver-bug-workarounds \
+          --enable-features=VaapiVideoEncoder,VaapiVideoDecoder,CanvasOopRasterization
+
+      '')
+
     (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
     (vscode-with-extensions.override {
-      vscode = pkgs.vscodium;
+      #vscode = pkgs.vscodium;
+      #vscode = pkgs.vscode-fhs;
       vscodeExtensions = (with pkgs.vscode-extensions; [
-        ms-vscode-remote.remote-ssh
+        (ms-vscode-remote.remote-ssh.override { useLocalExtensions = true; })
         sumneko.lua
         jnoortheen.nix-ide
         vscodevim.vim
@@ -206,14 +202,17 @@
   #services.printing.enable = true;
   #services.printing.drivers = [ pkgs.xerox-workcentre-3045b-3045ni ];
 
-  # Enable sound.
-  sound = {
+  security.rtkit.enable = true;
+  services.pipewire = {
     enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
   };
 
   services = {
-    # https://github.com/NixOS/nixpkgs/issues/135888
-    nscd.enableNsncd = true;
     fwupd.enable = true;
     physlock = {
       allowAnyUser = true;
@@ -249,28 +248,6 @@
     };
 
   };
-
-  sops = {
-    defaultSopsFile = ./secrets/secrets.yaml;
-    secrets.wireguard-private-key = { };
-  };
-
-  networking.wireguard.interfaces = {
-    wg0 = {
-      ips = [ "fd::2/64" "fd00:b0a7::11/64" ];
-      listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
-      privateKeyFile = config.sops.secrets.wireguard-private-key.path;
-      peers = [
-        {
-          publicKey = "ENP/VXsNXT1mW9622KqsgNdbzxjXeIwQ3+TxTPx1lyI=";
-          allowedIPs = [ "fd::/64" "fd00:b0a7::/64" ];
-          endpoint = "168.119.229.37:51820";
-          persistentKeepalive = 25;
-        }
-      ];
-    };
-  };
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -1,53 +1,25 @@
 {
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
-    sops-nix.url = github:Mic92/sops-nix;
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, sops-nix, ... }:
-    let
-      overlays = [ (import ./pkgs/overlay) ];
-    in
+  outputs = { self, nixpkgs, ... }:
     {
       nixosConfigurations = {
-        x1 = let system = "x86_64-linux"; in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-            pkgs = import nixpkgs {
-              inherit system overlays;
-              config.allowUnfree = true;
-            };
-            modules = [
-              ./common.nix
-              ./x1/configuration.nix
-              sops-nix.nixosModules.sops
+        x1 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit nixpkgs; };
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [
+              (import ./pkgs/overlay)
             ];
+            config.allowUnfree = true;
           };
-        merovingian = let system = "x86_64-linux"; in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-            pkgs = import nixpkgs {
-              inherit system overlays;
-            };
-            modules = [
-              ./common.nix
-              ./merovingian/configuration.nix
-              sops-nix.nixosModules.sops
-            ];
-          };
-        #pajo = let system = "aarch64-linux"; in
-        #  nixpkgs.lib.nixosSystem {
-        #    inherit system;
-        #    pkgs = import nixpkgs {
-        #      inherit system overlays;
-        #    };
-        #    modules = [
-        #      ./common.nix
-        #      ./pajo/configuration.nix
-        #      sops-nix.nixosModules.sops
-        #    ];
-        #  };
+          modules = [
+            ./common.nix
+            ./x1/configuration.nix
+          ];
+        };
       };
     };
 }

@@ -1,14 +1,20 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs, ... }:
 
 {
   nix = {
-    #package = pkgs.nixVersions.unstable;
+    package = pkgs.nixVersions.stable;
     settings.trusted-users = [ "lblasc" ];
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
     settings.warn-dirty = false;
+    channel.enable = false;
+    nixPath = [ "/etc/nix/inputs" ];
+    registry.nixpkgs.flake = nixpkgs;
   };
+  nix.settings.nix-path = [ "/etc/nix/inputs" ];
+
+  environment.etc."nix/inputs/nixpkgs".source = "${nixpkgs.outPath}";
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lblasc = {
@@ -28,7 +34,6 @@
     screen
     vim
     wget
-    wireguard-tools
   ];
 
   programs = {
