@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, tvbeat-ssh, ... }:
 
 {
   imports =
@@ -15,8 +15,9 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_6_1;
+    kernelPackages = pkgs.linuxPackages_6_10;
     #kernelPackages = pkgs.linuxPackages_latest;
+    #kernelParams = [ "i915.enable_psr=0" ];
     extraModulePackages = with config.boot.kernelPackages; [
       acpi_call
     ];
@@ -51,22 +52,12 @@
     interfaces = [ "wlp0s20f3" ];
     # interfaces = [ "wlp0s20f0u2u3" ];
   };
-
-  services.throttled.enable = true;
-
-  # battery charge threshold
-  # echo 90 > /sys/class/power_supply/BAT0/charge_control_end_threshold
-  # echo 75 > /sys/class/power_supply/BAT0/charge_control_start_threshold
-  services.auto-cpufreq.enable = true;
-
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   #networking.useDHCP = false;
   #networking.interfaces.enp0s31f6.useDHCP = true;
   networking.interfaces.wlp0s20f3.useDHCP = true;
-
-  services.avahi.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -81,14 +72,13 @@
       sensitivity = 255;
       speed = 255;
     };
-    #pulseaudio.enable = true;
-    #pulseaudio.support32Bit = true;
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;
+    bluetooth.enable = true; # enables support for Bluetooth
+    bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
 
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport = true;
       extraPackages = with pkgs; [
         (vaapiIntel.override { enableHybridCodec = true; })
         vaapiVdpau
@@ -117,12 +107,12 @@
   environment.systemPackages = with pkgs; [
     alacritty
     auto-cpufreq
-    awscli
     firefox
     flameshot
     nil
     remmina
-    google-chrome
+    pavucontrol
+    tvbeat-ssh.packages.${config.nixpkgs.system}.default
 
     (pkgs.writeScriptBin "chromium"
       ''
@@ -141,22 +131,30 @@
       '')
 
     (luajit.withPackages (ps: with ps; [ busted rapidjson lua-toml ]))
-    (vscode-with-extensions.override {
-      #vscode = pkgs.vscodium;
-      #vscode = pkgs.vscode-fhs;
-      vscodeExtensions = (with pkgs.vscode-extensions; [
-        (ms-vscode-remote.remote-ssh.override { useLocalExtensions = true; })
-        sumneko.lua
-        jnoortheen.nix-ide
-        vscodevim.vim
-        redhat.vscode-yaml
-        hashicorp.terraform
-        arrterian.nix-env-selector
-        bierner.markdown-emoji
-        yzhang.markdown-all-in-one
-        streetsidesoftware.code-spell-checker
-      ]);
+    (pkgs.vscode.fhsWithPackages (ps: with ps; [ rustup zlib openssl.dev pkg-config ]))
+    (pkgs.wrapOBS {
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+        obs-backgroundremoval
+        obs-pipewire-audio-capture
+      ];
     })
+    #(vscode-with-extensions.override {
+    #  vscode =
+    #  #vscode = pkgs.vscode-fhs;
+    #  vscodeExtensions = (with pkgs.vscode-extensions; [
+    #    (ms-vscode-remote.remote-ssh.override { useLocalExtensions = true; })
+    #    sumneko.lua
+    #    jnoortheen.nix-ide
+    #    vscodevim.vim
+    #    redhat.vscode-yaml
+    #    hashicorp.terraform
+    #    arrterian.nix-env-selector
+    #    bierner.markdown-emoji
+    #    yzhang.markdown-all-in-one
+    #    streetsidesoftware.code-spell-checker
+    #  ]);
+    #})
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -171,7 +169,6 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryFlavor = "gnome3";
     };
   };
 
@@ -213,23 +210,47 @@
   };
 
   services = {
+    blueman.enable = true;
+    avahi.enable = true;
+
+    throttled.enable = true;
+
+    # battery charge threshold
+    # echo 90 > /sys/class/power_supply/BAT0/charge_control_end_threshold
+    # echo 75 > /sys/class/power_supply/BAT0/charge_control_start_threshold
+    auto-cpufreq.enable = true;
+
     fwupd.enable = true;
     physlock = {
       allowAnyUser = true;
       enable = true;
     };
+    #picom = {
+    #  enable = true;
+    #  vSync = true;
+    #};
+
+    # Enable touchpad support.
+    libinput.enable = true;
+
+    displayManager.defaultSession = "none+awesome";
+
     # Enable the X11 windowing system.
     xserver = {
       enable = true;
-      layout = "hr";
-      xkbVariant = "us";
+      xkb = {
+        variant = "us";
+        options = "eurosign:e";
+        layout = "hr";
+      };
       dpi = 210;
-      videoDrivers = [ "modesetting" ];
+      #videoDrivers = [ "intel" ];
+      #deviceSection = ''
+      #  Option "DRI" "2"
+      #  Option "TearFree" "true"
+      #'';
 
-      # Enable touchpad support.
-      libinput.enable = true;
 
-      xkbOptions = "eurosign:e";
 
       windowManager.awesome = {
         enable = true;
@@ -243,10 +264,13 @@
           ''${pkgs.libnotify}/bin/notify-send "Locking in 10 seconds"'';
       };
 
-      displayManager.defaultSession = "none+awesome";
-
     };
 
+  };
+
+  xdg.mime.defaultApplications = {
+    "x-scheme-handler/http" = "google-chrome.desktop";
+    "x-scheme-handler/https" = "google-chrome.desktop";
   };
 
   # This value determines the NixOS release from which the default

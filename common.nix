@@ -3,6 +3,7 @@
 {
   nix = {
     package = pkgs.nixVersions.stable;
+    #package = pkgs.nixVersions.unstable;
     settings.trusted-users = [ "lblasc" ];
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -34,9 +35,12 @@
     screen
     vim
     wget
+    direnv
+    jq
   ];
 
   programs = {
+    vim.enable = true;
     vim.defaultEditor = true;
   };
 }
