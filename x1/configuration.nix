@@ -15,12 +15,16 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_6_10;
+    kernelPackages = pkgs.linuxPackages_6_11;
     #kernelPackages = pkgs.linuxPackages_latest;
     #kernelParams = [ "i915.enable_psr=0" ];
     extraModulePackages = with config.boot.kernelPackages; [
       acpi_call
     ];
+    #extraModprobeConfig = ''
+    #  options snd_intel_dspcfg dsp_driver=4
+    #  options snd-soc-avs ignore_fw_version=1
+    #'';
 
     tmp.cleanOnBoot = true;
   };
@@ -99,6 +103,21 @@
     earlySetup = true;
   };
 
+  fonts.packages = with pkgs; [
+    cascadia-code
+    maple-mono
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+    mplus-outline-fonts.githubRelease
+    jetbrains-mono
+    dina-font
+    proggyfonts
+  ];
+
   # Set your time zone.
   time.timeZone = "Europe/Zagreb";
 
@@ -108,16 +127,21 @@
     alacritty
     auto-cpufreq
     firefox
-    flameshot
+    grimblast
     nil
     remmina
     pavucontrol
+    kitty
     tvbeat-ssh.packages.${config.nixpkgs.system}.default
+    fuzzel
+    waybar
+    hyprpaper
+    gparted
 
     (pkgs.writeScriptBin "chromium"
       ''
         exec ${chromium}/bin/chromium \
-          --enable-features=VaapiVideoDecoder
+          --enable-features=VaapiVideoDecodeLinuxGL
       '')
 
 
@@ -157,6 +181,12 @@
     #})
   ];
 
+  # needed for gparted
+  security.polkit.enable = true;
+
+  # Optional, hint Electron apps to use Wayland:
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -170,6 +200,7 @@
       enable = true;
       enableSSHSupport = true;
     };
+    hyprland.enable = true; # enable Hyprland
   };
 
   programs.light.enable = true;
@@ -187,7 +218,7 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 3000 5556 5558 ];
+  networking.firewall.allowedTCPPorts = [ 3000 5556 5558 4455 ];
   networking.firewall = {
     allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
   };
@@ -209,6 +240,14 @@
     #jack.enable = true;
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+    ];
+  };
+
   services = {
     blueman.enable = true;
     avahi.enable = true;
@@ -221,51 +260,14 @@
     auto-cpufreq.enable = true;
 
     fwupd.enable = true;
+
     physlock = {
       allowAnyUser = true;
       enable = true;
     };
-    #picom = {
-    #  enable = true;
-    #  vSync = true;
-    #};
 
     # Enable touchpad support.
     libinput.enable = true;
-
-    displayManager.defaultSession = "none+awesome";
-
-    # Enable the X11 windowing system.
-    xserver = {
-      enable = true;
-      xkb = {
-        variant = "us";
-        options = "eurosign:e";
-        layout = "hr";
-      };
-      dpi = 210;
-      #videoDrivers = [ "intel" ];
-      #deviceSection = ''
-      #  Option "DRI" "2"
-      #  Option "TearFree" "true"
-      #'';
-
-
-
-      windowManager.awesome = {
-        enable = true;
-      };
-
-      xautolock = {
-        enable = true;
-        enableNotifier = true;
-        locker = ''${config.security.wrapperDir}/physlock'';
-        notifier =
-          ''${pkgs.libnotify}/bin/notify-send "Locking in 10 seconds"'';
-      };
-
-    };
-
   };
 
   xdg.mime.defaultApplications = {
