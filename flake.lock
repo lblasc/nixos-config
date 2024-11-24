@@ -20,16 +20,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1725634671,
-        "narHash": "sha256-v3rIhsJBOMLR8e/RNWxr828tB+WywYIoajrZKFM+0Gg=",
+        "lastModified": 1732402008,
+        "narHash": "sha256-Mp9DB8iw2wKKXWgRCELgQUvaXrggZtM35pFVHlgs7UA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "574d1eac1c200690e27b8eb4e24887f8df7ac27c",
+        "rev": "4238856f159ee5ff7c18f21331c9092025dc6898",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "ref": "nixos-unstable-small",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -63,11 +63,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1720035646,
-        "narHash": "sha256-NbzJSmoVNNzOYrNb8SeH4IrEsSC1LTJOocv6i2Q2o1I=",
+        "lastModified": 1729245978,
+        "narHash": "sha256-X7/YKvnLnFPpnXrRiH0KnHrYUZwcziFKQ4hErkaHm8c=",
         "owner": "tvbeat",
         "repo": "tvbeat-ssh",
-        "rev": "5bd70a4ee31daec19492bce8a611c4f3c5be4ed9",
+        "rev": "869daf9b5855af93ca260c55f187f4242db9045b",
         "type": "github"
       },
       "original": {

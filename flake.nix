@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
+    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable-small;
     tvbeat-ssh.url = github:tvbeat/tvbeat-ssh;
     tvbeat-ssh.inputs.nixpkgs.follows = "nixpkgs";
   };
