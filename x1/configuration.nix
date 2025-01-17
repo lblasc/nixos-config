@@ -15,7 +15,7 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_6_11;
+    kernelPackages = pkgs.linuxPackages_6_12;
     #kernelPackages = pkgs.linuxPackages_latest;
     #kernelParams = [ "i915.enable_psr=0" ];
     extraModulePackages = with config.boot.kernelPackages; [
