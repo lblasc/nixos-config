@@ -18,24 +18,41 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "nixos-hardware": {
       "locked": {
-        "lastModified": 1732402008,
-        "narHash": "sha256-Mp9DB8iw2wKKXWgRCELgQUvaXrggZtM35pFVHlgs7UA=",
+        "lastModified": 1737306303,
+        "narHash": "sha256-USvc6Fk/o3kmhSp6VEUegJq9RFuSes1U4pRdaLYyGJw=",
         "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "4238856f159ee5ff7c18f21331c9092025dc6898",
+        "repo": "nixos-hardware",
+        "rev": "f8d5f4ea3e341ffe1bdbea59ae7002c3ddf0c249",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable-small",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1737302326,
+        "narHash": "sha256-pRVbkFoiq6574L4IPDTOMOqI3RUop2MQLhLERl255bM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "0d199cbfbb071e3a8ae2d3581a37e70f653dff2c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "tvbeat-ssh": "tvbeat-ssh"
       }
