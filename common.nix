@@ -26,7 +26,12 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAncAa2+3hm+k1stfkAR1o+CfPP4UQV7UJClaWA8OC1/"
     ];
     packages = with pkgs; [
-      tree
+      (pkgs.writeScriptBin "chromium-work"
+        ''
+          exec ${ungoogled-chromium}/bin/chromium \
+            --user-data-dir=/home/lblasc/.config/chromium-work
+            --enable-features=VaapiVideoDecodeLinuxGL
+        '')
     ];
   };
 

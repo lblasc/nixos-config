@@ -102,29 +102,13 @@
     hyprpaper
     gparted
     zed-editor
-
-    (pkgs.writeScriptBin "chromium-work"
-      ''
-        exec ${ungoogled-chromium}/bin/chromium \
-          --user-data-dir=~/.config/chromium-work
-          --enable-features=VaapiVideoDecodeLinuxGL
-      '')
-
+    google-chrome
     (pkgs.writeScriptBin "chromium"
       ''
         exec ${ungoogled-chromium}/bin/chromium \
           --enable-features=VaapiVideoDecodeLinuxGL
       '')
 
-
-    (pkgs.writeScriptBin "google-chrome"
-      ''
-        exec ${google-chrome}/bin/google-chrome-stable \
-          --enable-features=VaapiVideoDecoder \
-          --disable-gpu-driver-bug-workarounds \
-          --enable-features=VaapiVideoEncoder,VaapiVideoDecoder,CanvasOopRasterization
-
-      '')
 
     (pkgs.wrapOBS {
       plugins = with pkgs.obs-studio-plugins; [
@@ -205,9 +189,19 @@
     ];
   };
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.greetd}/bin/agreety --cmd Hyprland";
+      };
+    };
+  };
+
   services = {
     blueman.enable = true;
     avahi.enable = true;
+    hypridle.enable = true;
 
     #throttled.enable = true;
 
